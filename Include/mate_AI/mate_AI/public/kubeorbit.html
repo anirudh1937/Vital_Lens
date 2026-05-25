@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KubeOrbit · Mate AI</title>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body class="agentos-body">
+  <div class="agentos-page">
+    <header class="agentos-hero glass-card">
+      <div class="hero-copy">
+        <div class="eyebrow">Infra control · Zero cloud guesswork</div>
+        <h1>KubeOrbit Control</h1>
+        <p class="lead">
+          Cluster telemetry, workloads, and deployments for Mate AI and VitalLens — surfaced directly inside Mate.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="/" target="_blank">Open Mate Chat</a>
+          <a class="ghost-btn" href="/agentos.html" target="_blank">AgentOS</a>
+        </div>
+      </div>
+      <div class="hero-panel glass-card" id="clusterPanel">
+        <p class="stat-label">Cluster</p>
+        <p class="stat-value" id="clusterName">--</p>
+        <p class="stat-sub" id="clusterMeta">context · region</p>
+        <div class="stat-row">
+          <div>
+            <p class="stat-label">Nodes</p>
+            <p class="stat-value" id="nodes">--</p>
+          </div>
+          <div>
+            <p class="stat-label">CPU alloc</p>
+            <p class="stat-value" id="cpu">--%</p>
+          </div>
+          <div>
+            <p class="stat-label">Mem alloc</p>
+            <p class="stat-value" id="mem">--%</p>
+          </div>
+          <div>
+            <p class="stat-label">Pods</p>
+            <p class="stat-value" id="pods">--</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="agentos-section">
+      <div class="section-header">
+        <h2>Workloads</h2>
+        <p>Mate AI, AgentOS bridge, VitalLens — in one view.</p>
+        <button class="ghost-btn" onclick="loadStatus(true)">Refresh</button>
+      </div>
+      <div class="stack-grid" id="workloadGrid"></div>
+    </section>
+  </div>
+
+  <script>
+    let timer;
+    async function loadStatus(manual) {
+      try {
+        const res = await fetch('/api/kubeorbit/status');
+        const data = await res.json();
+        const c = data.cluster;
+        document.getElementById('clusterName').textContent = c.name;
+        document.getElementById('clusterMeta').textContent = `${c.context} · ${c.region}`;
+        document.getElementById('nodes').textContent = c.nodes;
+        document.getElementById('cpu').textContent = `${c.cpuAllocPct}%`;
+        document.getElementById('mem').textContent = `${c.memAllocPct}%`;
+        document.getElementById('pods').textContent = `${c.podsRunning} running`;
+
+        const grid = document.getElementById('workloadGrid');
+        grid.innerHTML = '';
+        (data.workloads || []).forEach(w => {
+          const card = document.createElement('div');
+          card.className = 'layer-card';
+          const statusColor = w.failing && w.failing > 0 ? '#f87171' : (w.status === 'Running' ? '#34d399' : '#fbbf24');
+          card.innerHTML = `
+            <h3>${w.name}</h3>
+            <p class="layer-chip">${w.ns}</p>
+            <ul>
+              <li>Replicas: ${w.ready}/${w.replicas} ${w.failing && w.failing>0 ? `(failing: ${w.failing})` : ''}</li>
+              <li>Image: ${w.image}</li>
+              <li>Status: <span style="color:${statusColor};font-weight:600;">${w.status}</span></li>
+            </ul>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        console.error('kubeorbit fetch failed', e);
+      } finally {
+        if (!manual) {
+          clearTimeout(timer);
+          timer = setTimeout(() => loadStatus(false), 10000);
+        }
+      }
+    }
+    loadStatus(false);
+  </script>
+</body>
+</html>

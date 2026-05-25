@@ -1,0 +1,1 @@
+raise RuntimeError(f'Cannot open video source: {source}')  

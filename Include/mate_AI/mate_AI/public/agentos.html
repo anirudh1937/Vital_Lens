@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AGENTOS — on-device RTOS + TinyLLM stack for $5 microcontrollers.">
+  <title>AGENTOS — On‑Device Agent Stack</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=5">
+</head>
+<body class="agentos-body">
+  <div class="agentos-page">
+    <header class="agentos-hero glass-card">
+      <div class="hero-copy">
+        <div class="eyebrow">On-device autonomy · No cloud required</div>
+        <h1>AGENTOS v1.0</h1>
+        <p class="lead">
+          RTOS + TinyLLM runtime that runs full ReAct agents on <strong>$5 STM32F446RE-class</strong> microcontrollers.
+          Deterministic scheduling, MPU isolation, and hardware tools so robots, drones, and satellites can
+          think and act without the internet.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="/">Open Mate Chat</a>
+          <a class="ghost-btn" href="#stack">See the stack</a>
+        </div>
+        <div class="hero-tags">
+          <span class="pill">Deterministic RTOS</span>
+          <span class="pill">INT4 TinyLLM</span>
+          <span class="pill">MCP Hardware Tools</span>
+          <span class="pill">ReAct loop</span>
+        </div>
+      </div>
+      <div class="hero-panel glass-card">
+        <div class="stat-row">
+          <div>
+            <p class="stat-label">Model</p>
+            <p class="stat-value">2&nbsp;MB INT4</p>
+            <p class="stat-sub">KV cache: flash + RAM split</p>
+          </div>
+          <div>
+            <p class="stat-label">Throughput</p>
+            <p class="stat-value">≈5 tok/s</p>
+            <p class="stat-sub">Streaming responses</p>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div>
+            <p class="stat-label">Safety</p>
+            <p class="stat-value">MPU + WDOG</p>
+            <p class="stat-sub">Task isolation &amp; recovery</p>
+          </div>
+          <div>
+            <p class="stat-label">Latency</p>
+            <p class="stat-value">~200–400 ms</p>
+            <p class="stat-sub">Prompt → action loop</p>
+          </div>
+        </div>
+        <div class="hero-list">
+          <p class="stat-label">Demo Flow</p>
+          <ol>
+            <li>Voice command captured on-device.</li>
+            <li>ReAct loop plans &amp; calls tools via MCP.</li>
+            <li>Tools drive GPIO / motors / LoRa.</li>
+            <li>Telemetry streamed locally.</li>
+          </ol>
+        </div>
+      </div>
+    </header>
+
+    <section id="stack" class="agentos-section">
+      <div class="section-header">
+        <h2>Stack, Layered</h2>
+        <p>From silicon up to tools, tuned for constrained hardware.</p>
+      </div>
+      <div class="stack-grid">
+        <div class="layer-card">
+          <h3>LAYER 1 · Hardware</h3>
+          <p class="layer-chip">STM32F446RE (Cortex-M4)</p>
+          <ul>
+            <li>GPIO, ADC, UART, SPI, I2C, PWM</li>
+            <li>MPU regions, DMA, timers, watchdog</li>
+          </ul>
+        </div>
+        <div class="layer-card">
+          <h3>LAYER 2 · Kernel</h3>
+          <p class="layer-chip">FreeRTOS extension</p>
+          <ul>
+            <li>Deterministic scheduling</li>
+            <li>Task isolation + recovery hooks</li>
+          </ul>
+        </div>
+        <div class="layer-card">
+          <h3>LAYER 3 · TinyLLM</h3>
+          <p class="layer-chip">2 MB INT4</p>
+          <ul>
+            <li>KV cache across flash + RAM</li>
+            <li>Streaming generation · 5 tok/s</li>
+          </ul>
+        </div>
+        <div class="layer-card">
+          <h3>LAYER 4 · Agent Engine</h3>
+          <p class="layer-chip">ReAct loop</p>
+          <ul>
+            <li>Tool use via MCP protocol</li>
+            <li>Memory across sessions</li>
+            <li>Planner for task decomposition</li>
+          </ul>
+        </div>
+        <div class="layer-card">
+          <h3>LAYER 5 · MCP Tools</h3>
+          <p class="layer-chip">Hardware verbs</p>
+          <ul>
+            <li>GPIO control (LED / relays)</li>
+            <li>Sensor read (temperature, IMU)</li>
+            <li>Motor drive (PWM/ESC)</li>
+            <li>Communication (LoRa)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="agentos-section">
+      <div class="section-header">
+        <h2>Developer Workflow</h2>
+        <p>Build agents that respect real-time constraints.</p>
+      </div>
+      <div class="workflow-grid">
+        <div class="workflow-step">
+          <span class="step-id">01</span>
+          <h4>Define tools</h4>
+          <p>MCP schema → HAL shims (GPIO / ADC / PWM / LoRa). Safety envelopes baked in.</p>
+        </div>
+        <div class="workflow-step">
+          <span class="step-id">02</span>
+          <h4>Quantize &amp; pack</h4>
+          <p>Convert to 4-bit weights, split KV cache across flash + SRAM, flash via DFU/OTA.</p>
+        </div>
+        <div class="workflow-step">
+          <span class="step-id">03</span>
+          <h4>Ship &amp; observe</h4>
+          <p>Deterministic scheduler protects control loops; watchdog + MPU fences rogue agents.</p>
+        </div>
+        <div class="workflow-step">
+          <span class="step-id">04</span>
+          <h4>Iterate fast</h4>
+          <p>Trace hooks for timing, token counts, tool calls; swap models without cloud changes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="agentos-section">
+      <div class="section-header">
+        <h2>Where it fits</h2>
+        <p>Edge autonomy under tight power, bandwidth, and safety budgets.</p>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-card">
+          <h4>Robots &amp; Cobots</h4>
+          <p>Local plan/act loops for pick-place, inspection, and dexterity without Wi‑Fi.</p>
+        </div>
+        <div class="usecase-card">
+          <h4>Drones</h4>
+          <p>Obstacle handling, waypoint updates, and payload control even when GNSS/cloud drop.</p>
+        </div>
+        <div class="usecase-card">
+          <h4>Satellites &amp; Remote Sensing</h4>
+          <p>Onboard summarization and anomaly detection before downlink.</p>
+        </div>
+        <div class="usecase-card">
+          <h4>Industrial Sensors</h4>
+          <p>Voice/gesture to actuator, local filtering, and LoRa bursts instead of constant uplink.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="agentos-cta glass-card">
+      <div>
+        <h3>Want the firmware + demo projects?</h3>
+        <p>We can package the TinyLLM runtime, MCP tools, and a starter FreeRTOS project for your board.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="primary-btn" href="/api/platform/v1/capabilities" target="_blank">API snapshot</a>
+        <a class="ghost-btn" href="/">Chat with Mate</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

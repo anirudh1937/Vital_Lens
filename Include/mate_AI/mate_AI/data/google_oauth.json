@@ -1,0 +1,5 @@
+{
+  "client_id": "PASTE_GOOGLE_CLIENT_ID_HERE",
+  "client_secret": "PASTE_GOOGLE_CLIENT_SECRET_HERE",
+  "redirect_uri": "http://localhost:3000/api/google/oauth/callback"
+}

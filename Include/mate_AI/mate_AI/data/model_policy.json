@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "provider": "groq",
+  "chat": {
+    "primary": "moonshotai/kimi-k2-instruct-0905",
+    "trend": "meta-llama/llama-4-scout-17b-16e-instruct",
+    "fallback": "openai/gpt-oss-120b"
+  },
+  "training": {
+    "teacherModel": "openai/gpt-oss-120b",
+    "baseFamily": "llama-4-or-gpt-oss",
+    "note": "Keep this file current with provider model releases and deprecations."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "postgres": [
+    {
+      "id": "main",
+      "host": "127.0.0.1",
+      "port": 5432,
+      "user": "postgres",
+      "password": "postgres",
+      "database": "postgres",
+      "ssl": false
+    }
+  ],
+  "mysql": [
+    {
+      "id": "main",
+      "host": "127.0.0.1",
+      "port": 3306,
+      "user": "root",
+      "password": "root",
+      "database": "test",
+      "ssl": false
+    }
+  ],
+  "sqlite": [
+    {
+      "id": "local",
+      "filename": "data/mate.db"
+    }
+  ]
+}

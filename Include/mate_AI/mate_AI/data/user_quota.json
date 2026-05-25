@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "defaults": {
+    "free": {
+      "monthlyTokenLimit": 100000,
+      "monthlyMessageLimit": 300
+    }
+  },
+  "users": {
+    "demo_user": {
+      "userId": "demo_user",
+      "plan": "free",
+      "monthlyTokenLimit": 1200,
+      "monthlyMessageLimit": 10,
+      "createdAt": 1772282505780,
+      "updatedAt": 1772282770739,
+      "active": true
+    },
+    "guest": {
+      "userId": "guest",
+      "plan": "free",
+      "monthlyTokenLimit": 100000,
+      "monthlyMessageLimit": 300,
+      "createdAt": 1772606840225,
+      "updatedAt": 1779267699475,
+      "active": true
+    },
+    "real-estate-owner": {
+      "userId": "real-estate-owner",
+      "plan": "free",
+      "monthlyTokenLimit": 100000,
+      "monthlyMessageLimit": 300,
+      "createdAt": 1773053428062,
+      "updatedAt": 1773053449724,
+      "active": true
+    }
+  },
+  "usage": {
+    "demo_user:2026-02": {
+      "userId": "demo_user",
+      "period": "2026-02",
+      "tokensUsed": 111,
+      "messagesUsed": 2,
+      "updatedAt": 1772282770739
+    },
+    "guest:2026-03": {
+      "userId": "guest",
+      "period": "2026-03",
+      "tokensUsed": 3228,
+      "messagesUsed": 6,
+      "updatedAt": 1773060762072
+    },
+    "real-estate-owner:2026-03": {
+      "userId": "real-estate-owner",
+      "period": "2026-03",
+      "tokensUsed": 4962,
+      "messagesUsed": 1,
+      "updatedAt": 1773053449724
+    },
+    "guest:2026-05": {
+      "userId": "guest",
+      "period": "2026-05",
+      "tokensUsed": 11027,
+      "messagesUsed": 9,
+      "updatedAt": 1779267699475
+    }
+  }
+}

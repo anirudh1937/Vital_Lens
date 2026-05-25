@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "parcels": {
+    "parcel_1773052966611_85212": {
+      "id": "parcel_1773052966611_85212",
+      "userId": "smoke-user",
+      "name": "Smoke Parcel",
+      "location": {
+        "state": "Telangana",
+        "district": "Hyderabad",
+        "lat": 17.389667,
+        "lng": 78.482667
+      },
+      "geoFence": {
+        "titleClear": true,
+        "legalDispute": false,
+        "ecoSensitive": false,
+        "forestZone": false,
+        "floodPlain": false,
+        "highwayAccessKm": 3,
+        "metroDistanceKm": 2,
+        "airportDistanceKm": 25,
+        "socialInfraScore": 80,
+        "upcomingProjectsScore": 83,
+        "utilityReadinessScore": 76,
+        "crimeRiskScore": 28,
+        "climateRiskScore": 30
+      },
+      "polygon": [
+        {
+          "lat": 17.39,
+          "lng": 78.48
+        },
+        {
+          "lat": 17.391,
+          "lng": 78.483
+        },
+        {
+          "lat": 17.388,
+          "lng": 78.485
+        }
+      ],
+      "polygonAreaSqm": 65040.62,
+      "analysis": {
+        "analyzedAt": 1773052966611,
+        "location": {
+          "state": "Telangana",
+          "district": "Hyderabad",
+          "lat": 17.389667,
+          "lng": 78.482667
+        },
+        "compliance": {
+          "clearanceBand": "clear",
+          "blockers": []
+        },
+        "scoring": {
+          "suitabilityScore": 100,
+          "suitabilityBand": "excellent",
+          "growthIndex": 94.85,
+          "growthBand": "excellent"
+        },
+        "forecast": {
+          "cagr1yPct": 11.29,
+          "cagr3yPct": 13.88,
+          "cagr5yPct": 15.62
+        },
+        "recommendation": "Develop with compliance checks",
+        "assumptions": [
+          "Model output is directional and should be validated with official GIS, legal title, zoning and environmental records.",
+          "Growth forecasts are scenario estimates, not investment guarantees."
+        ]
+      },
+      "createdAt": 1773052966611,
+      "updatedAt": 1773052966611
+    }
+  },
+  "updatedAt": 1773052966612
+}

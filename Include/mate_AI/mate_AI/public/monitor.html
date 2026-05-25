@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mate AI Live Monitor</title>
+  <style>
+    :root {
+      --bg: #06141f;
+      --panel: #0f2231;
+      --panel-2: #163145;
+      --text: #e5f4ff;
+      --muted: #8cb3c9;
+      --ok: #2ad17c;
+      --warn: #ffb020;
+      --bad: #ff5c5c;
+      --line1: #2ad17c;
+      --line2: #39a8ff;
+      --line3: #ffb020;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, #13364d 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, #0b2639 0%, transparent 45%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; }
+    .head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .title h1 { margin: 0; font-size: 24px; letter-spacing: 0.3px; }
+    .title p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+    .status {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      background: rgba(42, 209, 124, 0.2);
+      border: 1px solid rgba(42, 209, 124, 0.5);
+    }
+    .status.bad {
+      background: rgba(255, 92, 92, 0.18);
+      border-color: rgba(255, 92, 92, 0.55);
+    }
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .card {
+      background: linear-gradient(170deg, var(--panel), var(--panel-2));
+      border: 1px solid rgba(140, 179, 201, 0.2);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .kpi { grid-column: span 3; }
+    .kpi .label { color: var(--muted); font-size: 12px; }
+    .kpi .value { margin-top: 6px; font-size: 26px; font-weight: 700; }
+    .kpi .sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .chart { grid-column: span 6; }
+    .chart h3, .list h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    canvas {
+      width: 100%;
+      height: 190px;
+      display: block;
+      background: rgba(2, 12, 20, 0.5);
+      border-radius: 10px;
+    }
+    .list { grid-column: span 6; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(140, 179, 201, 0.14);
+    }
+    th { color: var(--muted); font-weight: 600; }
+    .small { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(140, 179, 201, 0.4);
+      background: #13364d;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    @media (max-width: 960px) {
+      .kpi, .chart, .list { grid-column: span 12; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div class="title">
+        <h1>Mate Pulse: Live Monitoring</h1>
+        <p>Streaming health, traffic, latency, model behavior, and alert state.</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <a class="btn" id="backToChatBtn" href="/index.html">Back to Chat Bot Room</a>
+        <button class="btn" id="refreshBtn">Refresh Snapshot</button>
+        <div id="statusPill" class="status">OK</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card kpi">
+        <div class="label">Requests / min</div>
+        <div class="value" id="kpiRpm">0</div>
+        <div class="sub" id="kpiReqTotal">Total: 0</div>
+      </div>
+      <div class="card kpi">
+        <div class="label">Error Rate</div>
+        <div class="value" id="kpiErrRate">0%</div>
+        <div class="sub" id="kpiErrTotal">Errors: 0</div>
+      </div>
+      <div class="card kpi">
+        <div class="label">P95 Latency</div>
+        <div class="value" id="kpiP95">0 ms</div>
+        <div class="sub" id="kpiAvgLatency">Avg: 0 ms</div>
+      </div>
+      <div class="card kpi">
+        <div class="label">Active Users (5m)</div>
+        <div class="value" id="kpiUsers">0</div>
+        <div class="sub" id="kpiModel">Model calls: 0</div>
+      </div>
+
+      <div class="card chart">
+        <h3>Traffic and Error Rate (last 60 minutes)</h3>
+        <canvas id="trafficChart" width="560" height="190"></canvas>
+      </div>
+      <div class="card chart">
+        <h3>API + Model Latency (ms)</h3>
+        <canvas id="latencyChart" width="560" height="190"></canvas>
+      </div>
+
+      <div class="card list">
+        <h3>Top API Endpoints</h3>
+        <table>
+          <thead><tr><th>Endpoint</th><th>Count</th></tr></thead>
+          <tbody id="topEndpoints"></tbody>
+        </table>
+      </div>
+      <div class="card list">
+        <h3>Latest Alerts</h3>
+        <table>
+          <thead><tr><th>Time</th><th>Reason</th></tr></thead>
+          <tbody id="alerts"></tbody>
+        </table>
+        <div class="small" id="metaInfo">Waiting for live feed...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+    const trafficChart = el('trafficChart');
+    const latencyChart = el('latencyChart');
+    let latest = null;
+
+    function fmtInt(n) { return Number(n || 0).toLocaleString(); }
+    function fmtPct(n) { return `${Number(n || 0).toFixed(2)}%`; }
+    function fmtMs(n) { return `${Math.round(Number(n || 0))} ms`; }
+
+    function drawLines(canvas, lines) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(0,0,0,0.25)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(140,179,201,0.25)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i <= 4; i++) {
+        const y = (h / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const allVals = lines.flatMap((x) => x.values);
+      const max = Math.max(1, ...allVals);
+      lines.forEach((line) => {
+        const values = line.values;
+        if (!values.length) return;
+        ctx.strokeStyle = line.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        values.forEach((v, i) => {
+          const x = (i / Math.max(1, values.length - 1)) * (w - 10) + 5;
+          const y = h - (v / max) * (h - 10) - 5;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      });
+    }
+
+    function renderTables(data) {
+      const epBody = el('topEndpoints');
+      epBody.innerHTML = '';
+      (data.traffic.topEndpoints || []).forEach((row) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.endpoint}</td><td>${fmtInt(row.count)}</td>`;
+        epBody.appendChild(tr);
+      });
+      if (!epBody.children.length) {
+        epBody.innerHTML = '<tr><td colspan="2">No traffic yet</td></tr>';
+      }
+
+      const alertBody = el('alerts');
+      alertBody.innerHTML = '';
+      (data.alerts.recent || []).slice().reverse().forEach((a) => {
+        const tr = document.createElement('tr');
+        const when = new Date(a.at).toLocaleTimeString();
+        tr.innerHTML = `<td>${when}</td><td>${(a.reasons || []).join(', ')}</td>`;
+        alertBody.appendChild(tr);
+      });
+      if (!alertBody.children.length) {
+        alertBody.innerHTML = '<tr><td colspan="2">No alerts</td></tr>';
+      }
+    }
+
+    function render(data) {
+      latest = data;
+      el('kpiRpm').textContent = fmtInt(data.traffic.requestsPerMin);
+      el('kpiReqTotal').textContent = `Total: ${fmtInt(data.traffic.totalRequests)}`;
+      el('kpiErrRate').textContent = fmtPct(data.traffic.errorRatePct);
+      el('kpiErrTotal').textContent = `Errors: ${fmtInt(data.traffic.totalErrors)}`;
+      el('kpiP95').textContent = fmtMs(data.traffic.p95LatencyMs);
+      el('kpiAvgLatency').textContent = `Avg: ${fmtMs(data.traffic.avgLatencyMs)}`;
+      el('kpiUsers').textContent = fmtInt(data.users.activeUsers5m);
+      el('kpiModel').textContent = `Model calls: ${fmtInt(data.model.calls)} | Failovers: ${fmtInt(data.model.failovers)}`;
+
+      const pill = el('statusPill');
+      pill.textContent = data.status;
+      pill.className = data.status === 'ok' ? 'status' : 'status bad';
+
+      const reqLine = (data.series.requestsPerMin || []).map((x) => x.value);
+      const errLine = (data.series.errorRatePct || []).map((x) => x.value);
+      drawLines(trafficChart, [
+        { color: getComputedStyle(document.documentElement).getPropertyValue('--line2').trim(), values: reqLine },
+        { color: getComputedStyle(document.documentElement).getPropertyValue('--bad').trim(), values: errLine }
+      ]);
+
+      const avgLine = (data.series.avgLatencyMs || []).map((x) => x.value);
+      const p95Line = (data.series.p95LatencyMs || []).map((x) => x.value);
+      const modelLine = (data.series.modelLatencyMs || []).map((x) => x.value);
+      drawLines(latencyChart, [
+        { color: getComputedStyle(document.documentElement).getPropertyValue('--line1').trim(), values: avgLine },
+        { color: getComputedStyle(document.documentElement).getPropertyValue('--line3').trim(), values: p95Line },
+        { color: getComputedStyle(document.documentElement).getPropertyValue('--line2').trim(), values: modelLine }
+      ]);
+
+      renderTables(data);
+      const modelLabel = data.model.lastModelUsed ? ` | last model: ${data.model.lastModelUsed}` : '';
+      el('metaInfo').textContent = `Updated ${new Date(data.timestamp).toLocaleTimeString()} | CPU ${data.process.cpuPercent}% | RSS ${(data.process.rssBytes / (1024 * 1024)).toFixed(1)} MB${modelLabel}`;
+    }
+
+    async function refreshNow() {
+      const res = await fetch('/api/health/live');
+      if (!res.ok) throw new Error('Failed to fetch /api/health/live');
+      const data = await res.json();
+      render(data);
+    }
+
+    function startStream() {
+      const source = new EventSource('/api/monitor/stream');
+      source.onmessage = (ev) => {
+        try {
+          const data = JSON.parse(ev.data);
+          render(data);
+        } catch (e) {}
+      };
+      source.onerror = async () => {
+        source.close();
+        try { await refreshNow(); } catch (e) {}
+        setTimeout(startStream, 2000);
+      };
+    }
+
+    el('refreshBtn').addEventListener('click', () => {
+      refreshNow().catch(() => {});
+    });
+    el('backToChatBtn').addEventListener('click', (ev) => {
+      ev.preventDefault();
+      window.location.assign('/index.html');
+    });
+
+    refreshNow().catch(() => {});
+    startStream();
+  </script>
+</body>
+</html>

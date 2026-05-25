@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mate LandScope India</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  >
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"
+  >
+  <style>
+    :root {
+      --bg: #061015;
+      --panel: #11232c;
+      --panel-2: #193542;
+      --text: #e7f7ff;
+      --muted: #8fb3c4;
+      --ok: #2ad17c;
+      --warn: #f6bb42;
+      --bad: #ff5f6d;
+      --accent: #4cc9f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, #1b3f4f 0%, transparent 38%),
+        radial-gradient(circle at 88% 95%, #0b2a39 0%, transparent 42%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .wrap { max-width: 1380px; margin: 0 auto; }
+    .head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    h1 { margin: 0; font-size: 28px; }
+    .sub { color: var(--muted); margin-top: 6px; font-size: 13px; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(76, 201, 240, 0.15); color: var(--accent); border: 1px solid rgba(76, 201, 240, 0.4); font-size: 11px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(143, 179, 196, 0.4);
+      color: var(--text);
+      background: #173646;
+      padding: 8px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 12px;
+      gap: 6px;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+    .card {
+      background: linear-gradient(170deg, var(--panel), var(--panel-2));
+      border: 1px solid rgba(143, 179, 196, 0.2);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .card h3 { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+    .map-wrap { height: 360px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(143, 179, 196, 0.2); }
+    #map { width: 100%; height: 100%; }
+    .map-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 12px; color: var(--muted); }
+    .field input {
+      border: 1px solid rgba(143, 179, 196, 0.25);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: rgba(4, 20, 28, 0.65);
+      color: var(--text);
+    }
+    .toggle-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+    .toggle { display: flex; align-items: center; gap: 8px; border: 1px solid rgba(143, 179, 196, 0.2); border-radius: 10px; padding: 10px; background: rgba(5, 18, 25, 0.5); font-size: 12px; }
+    .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .primary { border-color: rgba(76, 201, 240, 0.6); background: rgba(76, 201, 240, 0.18); }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .kpi {
+      border: 1px solid rgba(143, 179, 196, 0.2);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(5, 18, 25, 0.5);
+    }
+    .kpi .label { color: var(--muted); font-size: 12px; }
+    .kpi .value { margin-top: 4px; font-size: 24px; font-weight: 700; }
+    .line { margin-top: 10px; font-size: 13px; }
+    .line strong { color: var(--accent); }
+    .bad { color: var(--bad); }
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .form-grid, .toggle-row, .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h1>Mate LandScope India</h1>
+        <div class="sub">Lean real-estate analyzer focused on the essentials. Draw a parcel, enter basics, and get a quick suitability verdict.</div>
+        <div class="pill">Simplified mode</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <a class="btn" href="/monitor">Mate Pulse</a>
+        <a class="btn" href="/index.html">Back to Chat Room</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Interactive Map (Draw Geo-fence Polygon)</h3>
+        <div class="map-wrap"><div id="map"></div></div>
+        <div class="map-actions">
+          <button class="btn" id="centerMapBtn">Center to Coordinates</button>
+          <button class="btn" id="clearPolygonBtn">Clear Polygon</button>
+          <span class="line">Polygon points: <strong id="polygonPoints">0</strong></span>
+          <span class="line">Area: <strong id="polygonArea">0 sqm</strong></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Parcel Input</h3>
+        <div class="form-grid">
+          <div class="field"><label>Parcel Name</label><input id="parcelName" value="Hyderabad Prime Parcel"></div>
+          <div class="field"><label>State</label><input id="state" value="Telangana"></div>
+          <div class="field"><label>District / City</label><input id="district" value="Hyderabad"></div>
+          <div class="field"><label>Latitude</label><input id="lat" type="number" step="0.000001" value="17.3850"></div>
+          <div class="field"><label>Longitude</label><input id="lng" type="number" step="0.000001" value="78.4867"></div>
+          <div class="field"><label>Highway Access (km)</label><input id="highwayAccessKm" type="number" value="3"></div>
+          <div class="field"><label>Social Infra Score (0-100)</label><input id="socialInfraScore" type="number" value="78"></div>
+          <div class="field"><label>Airport Distance (km)</label><input id="airportDistanceKm" type="number" value="26"></div>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle"><input id="titleClear" type="checkbox" checked> Title clear</label>
+          <label class="toggle"><input id="legalDispute" type="checkbox"> Legal dispute</label>
+          <label class="toggle"><input id="floodPlain" type="checkbox"> Flood plain</label>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="analyzeBtn">Analyze Land</button>
+          <button class="btn" id="sampleRiskBtn">Use Sample Risk</button>
+          <button class="btn" id="clearPolygonBtn">Clear Polygon</button>
+          <button class="btn" id="centerMapBtn">Center to Coordinates</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Decision Output</h3>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="label">Suitability</div><div class="value" id="suitabilityScore">-</div></div>
+          <div class="kpi"><div class="label">Growth Index</div><div class="value" id="growthIndex">-</div></div>
+          <div class="kpi"><div class="label">1Y CAGR</div><div class="value" id="cagr1y">-</div></div>
+          <div class="kpi"><div class="label">5Y CAGR</div><div class="value" id="cagr5y">-</div></div>
+        </div>
+        <div class="line">Compliance: <strong id="clearanceBand">-</strong></div>
+        <div class="line">Recommendation: <strong id="recommendation">-</strong></div>
+        <div class="line">Blockers: <span id="blockers">-</span></div>
+        <div class="line" id="analyzedAt"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let latestResult = null;
+    let map = null;
+    let drawnItems = null;
+    let activePolygon = [];
+
+    function round(n) { return Math.round(Number(n || 0) * 100) / 100; }
+
+    function estimateAreaSqm(points) {
+      if (!Array.isArray(points) || points.length < 3) return 0;
+      const R = 6378137;
+      const toXY = (p) => {
+        const latRad = (p.lat * Math.PI) / 180;
+        const lngRad = (p.lng * Math.PI) / 180;
+        return { x: R * lngRad * Math.cos(latRad), y: R * latRad };
+      };
+      const pts = points.map(toXY);
+      let area2 = 0;
+      for (let i = 0; i < pts.length; i += 1) {
+        const a = pts[i];
+        const b = pts[(i + 1) % pts.length];
+        area2 += a.x * b.y - b.x * a.y;
+      }
+      return Math.abs(area2 / 2);
+    }
+
+    function updatePolygonStats() {
+      $('polygonPoints').textContent = `${activePolygon.length}`;
+      $('polygonArea').textContent = `${round(estimateAreaSqm(activePolygon))} sqm`;
+    }
+
+    function setLatLngFromPolygon() {
+      if (!activePolygon.length) return;
+      const sum = activePolygon.reduce((acc, p) => ({ lat: acc.lat + p.lat, lng: acc.lng + p.lng }), { lat: 0, lng: 0 });
+      $('lat').value = (sum.lat / activePolygon.length).toFixed(6);
+      $('lng').value = (sum.lng / activePolygon.length).toFixed(6);
+    }
+
+    function syncPolygonFromLayer(layer) {
+      const latlngs = layer.getLatLngs();
+      const ring = Array.isArray(latlngs) && Array.isArray(latlngs[0]) ? latlngs[0] : [];
+      activePolygon = ring.map((p) => ({ lat: round(p.lat), lng: round(p.lng) }));
+      setLatLngFromPolygon();
+      updatePolygonStats();
+    }
+
+    function drawPolygonOnMap(points) {
+      drawnItems.clearLayers();
+      if (!Array.isArray(points) || points.length < 3) {
+        activePolygon = [];
+        updatePolygonStats();
+        return;
+      }
+      const layer = L.polygon(points.map((p) => [p.lat, p.lng]), { color: '#4cc9f0' });
+      drawnItems.addLayer(layer);
+      activePolygon = points.map((p) => ({ lat: Number(p.lat), lng: Number(p.lng) }));
+      setLatLngFromPolygon();
+      updatePolygonStats();
+      map.fitBounds(layer.getBounds(), { padding: [20, 20] });
+    }
+
+    function initMap() {
+      map = L.map('map').setView([Number($('lat').value), Number($('lng').value)], 11);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
+
+      const drawControl = new L.Control.Draw({
+        draw: {
+          polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#4cc9f0' } },
+          marker: false,
+          circle: false,
+          circlemarker: false,
+          polyline: false,
+          rectangle: false
+        },
+        edit: { featureGroup: drawnItems, remove: true }
+      });
+      map.addControl(drawControl);
+
+      map.on(L.Draw.Event.CREATED, (e) => {
+        drawnItems.clearLayers();
+        drawnItems.addLayer(e.layer);
+        syncPolygonFromLayer(e.layer);
+      });
+      map.on(L.Draw.Event.EDITED, (e) => {
+        e.layers.eachLayer((layer) => syncPolygonFromLayer(layer));
+      });
+      map.on(L.Draw.Event.DELETED, () => {
+        activePolygon = [];
+        updatePolygonStats();
+      });
+    }
+
+    function collectPayload() {
+      return {
+        location: {
+          state: $('state').value,
+          district: $('district').value,
+          lat: Number($('lat').value),
+          lng: Number($('lng').value)
+        },
+        geoFence: {
+          titleClear: $('titleClear').checked,
+          legalDispute: $('legalDispute').checked,
+          floodPlain: $('floodPlain').checked,
+          highwayAccessKm: Number($('highwayAccessKm').value),
+          metroDistanceKm: 8, // simplified: assume nearby metro
+          airportDistanceKm: Number($('airportDistanceKm').value),
+          socialInfraScore: Number($('socialInfraScore').value),
+          upcomingProjectsScore: 55,
+          utilityReadinessScore: 55,
+          crimeRiskScore: 40,
+          climateRiskScore: 40
+        },
+        polygon: activePolygon
+      };
+    }
+
+    function renderResult(result) {
+      latestResult = result;
+      $('suitabilityScore').textContent = `${result.scoring.suitabilityScore}`;
+      $('growthIndex').textContent = `${result.scoring.growthIndex}`;
+      $('cagr1y').textContent = `${result.forecast.cagr1yPct}%`;
+      $('cagr5y').textContent = `${result.forecast.cagr5yPct}%`;
+      $('clearanceBand').textContent = result.compliance.clearanceBand;
+      $('recommendation').textContent = result.recommendation;
+      $('blockers').textContent = result.compliance.blockers.length
+        ? result.compliance.blockers.join(', ')
+        : 'No major blockers flagged';
+      $('analyzedAt').textContent = `Analyzed at ${new Date(result.analyzedAt).toLocaleString()}`;
+    }
+
+    async function analyze() {
+      const payload = collectPayload();
+      const res = await fetch('/api/realestate/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('Analyze failed');
+      const data = await res.json();
+      renderResult(data.result);
+    }
+
+    $('analyzeBtn').addEventListener('click', () => analyze().catch((e) => alert(e.message)));
+    $('sampleRiskBtn').addEventListener('click', () => {
+      $('legalDispute').checked = true;
+      $('floodPlain').checked = true;
+      $('titleClear').checked = false;
+      $('socialInfraScore').value = 48;
+      $('highwayAccessKm').value = 18;
+      $('airportDistanceKm').value = 68;
+      drawPolygonOnMap([]);
+    });
+    $('centerMapBtn').addEventListener('click', () => {
+      if (!map) return;
+      map.setView([Number($('lat').value), Number($('lng').value)], 13);
+    });
+    $('clearPolygonBtn').addEventListener('click', () => {
+      drawnItems.clearLayers();
+      activePolygon = [];
+      updatePolygonStats();
+    });
+
+    initMap();
+    updatePolygonStats();
+    analyze().catch(() => {});
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0a2e"/>
+      <stop offset="100%" style="stop-color:#1a1145"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#06b6d4"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+  <!-- Outer ring glow -->
+  <circle cx="256" cy="240" r="140" fill="none" stroke="url(#accent)" stroke-width="4" opacity="0.3" filter="url(#glow)"/>
+  <!-- Robot head -->
+  <rect x="176" y="160" width="160" height="140" rx="30" fill="url(#accent)" opacity="0.9"/>
+  <!-- Eyes -->
+  <circle cx="220" cy="220" r="18" fill="#0f0a2e"/>
+  <circle cx="292" cy="220" r="18" fill="#0f0a2e"/>
+  <circle cx="224" cy="216" r="7" fill="#fff"/>
+  <circle cx="296" cy="216" r="7" fill="#fff"/>
+  <!-- Mouth - smile -->
+  <path d="M 220 265 Q 256 295 292 265" fill="none" stroke="#0f0a2e" stroke-width="6" stroke-linecap="round"/>
+  <!-- Antenna -->
+  <line x1="256" y1="160" x2="256" y2="120" stroke="url(#accent)" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="256" cy="112" r="10" fill="#06b6d4" filter="url(#glow)"/>
+  <!-- Handshake below -->
+  <g transform="translate(196, 330)" opacity="0.95">
+    <!-- Left hand -->
+    <path d="M 20 30 Q 40 10 60 20 L 70 25" fill="none" stroke="#7c3aed" stroke-width="7" stroke-linecap="round"/>
+    <!-- Right hand -->
+    <path d="M 100 30 Q 80 10 60 20 L 50 25" fill="none" stroke="#06b6d4" stroke-width="7" stroke-linecap="round"/>
+    <!-- Clasp -->
+    <circle cx="60" cy="22" r="8" fill="none" stroke="#fff" stroke-width="3" opacity="0.7"/>
+  </g>
+  <!-- "M" letter subtle watermark -->
+  <text x="256" y="430" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="36" fill="#fff" text-anchor="middle" opacity="0.15">MATE AI</text>
+</svg>

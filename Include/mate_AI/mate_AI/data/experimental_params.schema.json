@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mate-ai.local/schemas/experimental-params.schema.json",
+  "title": "Mate AI Experimental Parameters",
+  "description": "Non-standard behavior controls for conversational style, memory policy, and decision dynamics.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "truthfulness_humility": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.85,
+      "description": "Higher values prioritize explicit uncertainty instead of confident guessing.",
+      "x_rollout": "safe_default"
+    },
+    "memory_forgiveness_window_days": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3650,
+      "default": 30,
+      "description": "Age window after which older negative user signals lose weight.",
+      "x_rollout": "safe_default"
+    },
+    "disagreement_strength": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.7,
+      "description": "How strongly the assistant challenges weak assumptions.",
+      "x_rollout": "experimental"
+    },
+    "context_decay_curve": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "front_loaded",
+        "back_loaded",
+        "importance_weighted"
+      ],
+      "default": "front_loaded",
+      "description": "Controls how older context decays in influence.",
+      "x_rollout": "experimental"
+    },
+    "risk_of_boredom_target": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.65,
+      "description": "Higher values push more response variety and less repetitive patterns.",
+      "x_rollout": "experimental"
+    },
+    "curiosity_level": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.6,
+      "description": "How often the assistant asks proactive follow-up questions.",
+      "x_rollout": "safe_default"
+    },
+    "silence_tolerance_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000,
+      "default": 350,
+      "description": "Intentional pause before response generation for pacing.",
+      "x_rollout": "experimental"
+    },
+    "explanation_depth_by_mood": {
+      "type": "string",
+      "enum": [
+        "fixed_short",
+        "fixed_long",
+        "adaptive"
+      ],
+      "default": "adaptive",
+      "description": "Adapts explanation depth based on user tone and urgency.",
+      "x_rollout": "safe_default"
+    },
+    "novelty_bias": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.55,
+      "description": "Preference for uncommon but relevant ideas.",
+      "x_rollout": "experimental"
+    },
+    "counterfactual_mode": {
+      "type": "boolean",
+      "default": true,
+      "description": "Injects alternative scenario checks in reasoning.",
+      "x_rollout": "safe_default"
+    },
+    "assumption_audit_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.4,
+      "description": "Frequency of explicit assumption checks in responses.",
+      "x_rollout": "safe_default"
+    },
+    "self_revision_passes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "default": 1,
+      "description": "Number of post-draft refinement passes before final output.",
+      "x_rollout": "safe_default"
+    },
+    "confidence_calibration_style": {
+      "type": "string",
+      "enum": [
+        "conservative",
+        "balanced",
+        "bold"
+      ],
+      "default": "conservative",
+      "description": "Controls confidence expression style.",
+      "x_rollout": "safe_default"
+    },
+    "long_term_goal_anchor": {
+      "type": "string",
+      "default": "user_defined",
+      "maxLength": 120,
+      "description": "Persistent strategic objective applied across sessions.",
+      "x_rollout": "experimental"
+    },
+    "ethical_friction_level": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.75,
+      "description": "Adds caution barriers for risky user requests.",
+      "x_rollout": "safe_default"
+    },
+    "user_energy_match": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.8,
+      "description": "Matches pacing and verbosity to user style.",
+      "x_rollout": "safe_default"
+    },
+    "ambiguity_challenge_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.45,
+      "description": "Lower values ask clarifications sooner when prompt ambiguity is detected.",
+      "x_rollout": "safe_default"
+    },
+    "surprise_inclusion_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.2,
+      "description": "Chance to include one unexpected but relevant idea.",
+      "x_rollout": "experimental"
+    },
+    "learning_style_memory": {
+      "type": "boolean",
+      "default": true,
+      "description": "Remembers preferred explanation format for future turns.",
+      "x_rollout": "safe_default"
+    },
+    "contradiction_alert_sensitivity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.6,
+      "description": "Sensitivity for highlighting cross-message inconsistencies.",
+      "x_rollout": "experimental"
+    },
+    "decision_pressure_mode": {
+      "type": "string",
+      "enum": [
+        "options_first",
+        "balanced",
+        "recommendation_first"
+      ],
+      "default": "balanced",
+      "description": "Bias between presenting options and pushing a decision.",
+      "x_rollout": "experimental"
+    },
+    "empathy_precision": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.7,
+      "description": "Balances emotional acknowledgment against brevity.",
+      "x_rollout": "safe_default"
+    },
+    "goal_drift_detector": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.65,
+      "description": "Aggressiveness in flagging conversation drift from user goal.",
+      "x_rollout": "safe_default"
+    },
+    "time_cost_awareness": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.8,
+      "description": "Preference for lower time-cost suggestions.",
+      "x_rollout": "safe_default"
+    },
+    "social_risk_filter": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.85,
+      "description": "Protective filtering for socially risky advice.",
+      "x_rollout": "safe_default"
+    },
+    "regret_minimization_weight": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.7,
+      "description": "Weight toward choices likely to minimize future regret.",
+      "x_rollout": "experimental"
+    },
+    "micro_experiment_suggester": {
+      "type": "boolean",
+      "default": true,
+      "description": "Prefers proposing small tests over big irreversible steps.",
+      "x_rollout": "safe_default"
+    },
+    "trust_rebuild_protocol": {
+      "type": "string",
+      "enum": [
+        "disabled",
+        "enabled",
+        "strict"
+      ],
+      "default": "enabled",
+      "description": "Recovery policy after wrong or low-confidence answers.",
+      "x_rollout": "safe_default"
+    },
+    "privacy_paranoia_mode": {
+      "type": "boolean",
+      "default": false,
+      "description": "Applies stricter privacy behavior than baseline.",
+      "x_rollout": "experimental"
+    },
+    "human_override_priority": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2,
+      "default": 1,
+      "description": "How strongly explicit user instructions override internal heuristics.",
+      "x_rollout": "safe_default"
+    }
+  },
+  "required": [
+    "truthfulness_humility",
+    "memory_forgiveness_window_days",
+    "disagreement_strength",
+    "context_decay_curve",
+    "risk_of_boredom_target",
+    "curiosity_level",
+    "silence_tolerance_ms",
+    "explanation_depth_by_mood",
+    "novelty_bias",
+    "counterfactual_mode",
+    "assumption_audit_rate",
+    "self_revision_passes",
+    "confidence_calibration_style",
+    "long_term_goal_anchor",
+    "ethical_friction_level",
+    "user_energy_match",
+    "ambiguity_challenge_threshold",
+    "surprise_inclusion_rate",
+    "learning_style_memory",
+    "contradiction_alert_sensitivity",
+    "decision_pressure_mode",
+    "empathy_precision",
+    "goal_drift_detector",
+    "time_cost_awareness",
+    "social_risk_filter",
+    "regret_minimization_weight",
+    "micro_experiment_suggester",
+    "trust_rebuild_protocol",
+    "privacy_paranoia_mode",
+    "human_override_priority"
+  ]
+}

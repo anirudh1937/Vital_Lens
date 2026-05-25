@@ -1,0 +1,35 @@
+{
+  "name": "mate-ai",
+  "version": "1.0.0",
+  "description": "Mate AI — Your personalized AI chatbot powered by Ollama",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "train:prepare": "node scripts/build_training_data.js",
+    "train:prepare:bootstrap": "set INCLUDE_UNRATED=1&& node scripts/build_training_data.js",
+    "train:prepare:preferences": "node scripts/build_preference_data.js",
+    "train:quality": "node scripts/quality_gate.js",
+    "models:verify": "node scripts/verify_model_policy.js",
+    "train:pipeline": "npm run models:verify && npm run train:prepare && npm run train:quality",
+    "rag:reindex": "node scripts/reindex_rag.js",
+    "cloud:push": "node scripts/push_to_s3.js",
+    "db:exec": "node scripts/db_exec.js",
+    "ml:setup": "python -m pip install -r ml\\finance_market_model\\requirements.txt",
+    "ml:finance:train": "python scripts\\ml_train_finance.py --input data\\market\\ohlcv_sample.csv --model-out data\\ml\\finance_direction_model.pkl --report-out data\\ml\\finance_train_report.json",
+    "ml:finance:retrain": "python scripts\\ml_train_finance.py --input data\\market\\ohlcv_sample.csv --model-out data\\ml\\finance_direction_model.pkl --report-out data\\ml\\finance_train_report.json",
+    "ml:finance:predict": "python scripts\\ml_predict_finance.py --model data\\ml\\finance_direction_model.pkl --open 101 --high 103 --low 99 --close 102 --prev-close 100 --volume 120000",
+    "smoke:platform": "node scripts\\smoke_platform_v1.js",
+    "smoke:realestate": "node scripts\\smoke_real_estate.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.901.0",
+    "cheerio": "^1.2.0",
+    "express": "^4.21.0",
+    "marked": "^15.0.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.15.3",
+    "nodemailer": "^6.10.1",
+    "pg": "^8.16.3",
+    "sqlite3": "^5.1.7"
+  }
+}

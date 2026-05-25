@@ -1,0 +1,23 @@
+{
+    "name": "Mate AI",
+    "short_name": "Mate AI",
+    "description": "Your personalized AI chatbot — discuss tech, startups, sports, finance, and brainstorm ideas together.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a0f",
+    "theme_color": "#7c3aed",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ],
+    "categories": [
+        "productivity",
+        "utilities"
+    ],
+    "lang": "en"
+}
