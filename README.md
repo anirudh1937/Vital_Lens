@@ -1,5 +1,6 @@
 # VitalLens & Mate AI Integration
 
+
 <div align="center">
   <img src="assets/logo.png" alt="VitalLens logo" width="200" />
   <h3>The intelligent, real-time health and wellness oracle combining computer vision bio-scanning with conversational AI.</h3>
