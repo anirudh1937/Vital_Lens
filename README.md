@@ -83,6 +83,10 @@ graph TD
 3. **Mate AI Server (Backend/Web):** Node.js server connecting to the Groq API (Llama 3) for inference. It also hosts a web interface with Three.js particle effects and an AgentOS bridge for IoT device integration via MQTT.
 
 ---
+##SCREENSHOTS 
+
+<img width="1919" height="1026" alt="Screenshot 2026-05-19 162208" src="https://github.com/user-attachments/assets/9c728bed-b2eb-4b09-8cb2-679d74cad10b" />
+
 
 ## 🛠 Technology Stack
 
