@@ -86,6 +86,9 @@ graph TD
 ##SCREENSHOTS 
 
 <img width="1919" height="1026" alt="Screenshot 2026-05-19 162208" src="https://github.com/user-attachments/assets/9c728bed-b2eb-4b09-8cb2-679d74cad10b" />
+<img width="1919" height="1026" alt="Screenshot 2026-05-19 162224" src="https://github.com/user-attachments/assets/f95cc5c8-a85a-4a63-86d3-32d1d4c48bc1" />
+<img width="1919" height="1021" alt="Screenshot 2026-05-19 162415" src="https://github.com/user-attachments/assets/0d0ee253-737e-4702-9743-d4ad9da4e302" />
+<img width="1919" height="1010" alt="Screenshot 2026-05-19 162256" src="https://github.com/user-attachments/assets/4295187b-e1f2-4948-9ff0-24a0bcf7bb99" />
 
 
 ## 🛠 Technology Stack
