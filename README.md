@@ -5,7 +5,8 @@
   <img src="assets/logo.png" alt="VitalLens logo" width="200" />
   <h3>The intelligent, real-time health and wellness oracle combining computer vision bio-scanning with conversational AI.</h3>
   
-  [![Version](https://img.shields.io/badge/Version-0.4.0-blue)](#)
+  [![Version](https://img.shields.io/badge/Version-0.5.0--beta-blue)](#)
+  [![Status](https://img.shields.io/badge/Status-Work_In_Progress-orange)](#)
   [![Python](https://img.shields.io/badge/Python-3.10-green)](#)
   [![Node](https://img.shields.io/badge/Node-20-green)](#)
   [![FastAPI](https://img.shields.io/badge/FastAPI-latest-009688)](#)
@@ -33,6 +34,32 @@
 **VitalLens** is an advanced mobile health application that leverages standard smartphone cameras to perform remote health monitoring. In just 10 seconds of facial scanning, the system extracts critical biometrics using remote photoplethysmography (rPPG) and facial landmark tracking (MediaPipe).
 
 This biometric data is then instantly and seamlessly passed to **Mate AI**, our integrated conversational agent (powered by Groq/Ollama LLMs). Mate AI utilizes this hyper-personalized biological context to offer tailored wellness protocols, longevity forecasts, and actionable health insights in real time.
+
+---
+
+## 🚧 Coming Soon — Full AI Health Pipeline
+
+> **⚠️ Active Development Notice**
+>
+> The end-to-end VitalLens + Mate AI integration is currently **under active development and debugging**. The core vision is:
+>
+> 1. **Scan** → User performs a 10-second facial bio-scan via the mobile camera.
+> 2. **Analyze** → AI-powered computer vision extracts Heart Rate, Stress Index, Symmetry, and Radiance scores in real time.
+> 3. **Converse** → Health results are seamlessly passed to **Mate AI**, enabling an intelligent, context-aware health conversation where users can ask follow-up questions, get personalized wellness advice, and deep-dive into their biometric data.
+>
+> This full pipeline (Scan → AI Results → Chat with Mate AI about your health) is the **primary solution** and is being actively integrated. Stay tuned for updates!
+
+---
+
+## 🖼 Interface Previews
+
+### VitalLens Bio-Scan (Work in Progress)
+> **⚠️ Note:** We are currently facing an issue with the VitalLens scanner integration, and we are actively working on it. During this phase, you may see "Fetch Err" or connection timeouts in the system logs.
+
+**Description:** The mobile interface features a sleek, premium dark mode design. The bio-scan screen includes a camera viewfinder outlined in glowing green, a prominent "START BIO-SCAN" button, and an "AI ORACLE INSIGHTS" section below displaying the vault status and real-time system logs.
+
+### Mate AI Conversation
+**Description:** Once the bio-scan results are finalized and the integration is complete, they will be seamlessly fed into the conversational UI. Here, Mate AI will provide real-time wellness analysis and longevity insights based directly on the captured biometric data.
 
 ---
 
@@ -241,6 +268,21 @@ Since Day 1, the architecture has evolved significantly:
 3. **Async Video Processing:** Moved MediaPipe frame analysis into FastAPI `BackgroundTasks`. The mobile app now uploads the video, immediately receives a `scan_id`, and polls the server. This resolved previous HTTP timeout errors on slower hardware.
 4. **AgentOS IoT Bridging:** Added an MQTT bridging layer (`agentos-bridge/`) to ingest real-world telemetry from STM32F4-class microcontrollers, paving the way for multi-modal health monitoring (e.g., room air quality + user biometrics).
 5. **Emulator Resilience:** Built-in computer vision mock failovers to allow continuous frontend development even when webcam pass-through to the Android Emulator fails to capture a real face.
+6. **🔜 VitalLens ↔ Mate AI Real-Time Integration (In Progress):** Wiring the full pipeline — scan results feed directly into Mate AI's context window so users can have an informed, personalized health conversation immediately after a bio-scan. Currently debugging the end-to-end data handoff and SSE streaming stability.
+
+---
+
+## 📋 Current Status
+
+| Feature | Status |
+|---|---|
+| Mobile App (React Native/Expo) | ✅ Functional |
+| Camera Bio-Scan (10s capture) | ✅ Functional |
+| FastAPI CV Backend (rPPG pipeline) | ✅ Functional |
+| JWT Auth & Bio-Vault Storage | ✅ Functional |
+| Mate AI Server (Groq LLM) | ✅ Functional |
+| **Scan → AI Results → Mate AI Chat** | 🔜 **Coming Soon** |
+| AgentOS IoT Bridge | 🔜 Coming Soon |
 
 ---
 *Generated & maintained with care.*
