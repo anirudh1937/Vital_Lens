@@ -38,6 +38,8 @@ This biometric data is then instantly and seamlessly passed to **Mate AI**, our 
 ---
 
 ## 🚧 Coming Soon — Full AI Health Pipeline
+<img width="328" height="717" alt="Screenshot 2026-05-27 133559" src="https://github.com/user-attachments/assets/b653f416-979d-4b0f-b5a3-cf40e6bdad12" />
+
 
 > **⚠️ Active Development Notice**
 >
